@@ -2,3 +2,5 @@
 .idea
 model
 data
+summary
+*.pyc
