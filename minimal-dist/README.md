@@ -1,7 +1,7 @@
 # Minimal Example of Distributed Execution
 
 ```bash
-bash minimal_dist.sh
+bash minimal_dist_local.sh
 ```
 
 
