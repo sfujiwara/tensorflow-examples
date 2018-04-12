@@ -56,9 +56,9 @@ def main():
     tf.logging.set_verbosity(tf.logging.DEBUG)
 
     if USE_TPU:
-        # tpu_name ==> tpu in TensorFlow v1.7
+        # tpu_names ==> tpu in TensorFlow v1.7
         tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver(
-            tpu_names=TPU_NAMES,
+            tpu=TPU_NAMES,
             zone="us-central1-c",
         )
         master = tpu_cluster_resolver.get_master()
@@ -66,6 +66,7 @@ def main():
         master = ""
     tf.logging.debug("Master: {}".format(master))
 
+    # Create TPU config
     tpu_config = tpu.TPUConfig(num_shards=NUM_SHARDS)
 
     run_config = tf.contrib.tpu.RunConfig(
