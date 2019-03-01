@@ -6,7 +6,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 # Setting for TPU
 USE_TPU = True
-TPU_NAMES = ["demo-tpu"]
+TPU_NAMES = ""
 NUM_SHARDS = 8
 
 # You should use Google Cloud Storage when using Cloud TPU
@@ -57,10 +57,11 @@ def main():
 
     if USE_TPU:
         # tpu_names ==> tpu in TensorFlow v1.7
-        tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver(
-            tpu=TPU_NAMES,
-            zone="us-central1-c",
-        )
+        # tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver(
+        #     tpu=TPU_NAMES,
+        #     zone="us-central1-f",
+        # )
+        tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver()
         master = tpu_cluster_resolver.get_master()
     else:
         master = ""
