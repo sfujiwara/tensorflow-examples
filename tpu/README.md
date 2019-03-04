@@ -1,9 +1,23 @@
 # TensorFlow Examples Using TPUs
 
-```
+## Run on Compute Engine and Cloud TPU
+
+```bash
 PROJECT_ID=`gcloud config list project --format "value(core.project)"`
-curl -H "Authorization: Bearer $(gcloud auth print-access-token)" "https://ml.googleapis.com/v1/projects/${PROJECT_ID}:getConfig"
+MODEL_DIR=${YOUR_CLOUD_STORAGE_PATH}
+TPU_NAME=${YOUR_TPU_NAME}
 ```
+
+```bash
+python mnist_tpu.py \
+  --use_tpu \
+  --tpu_name=${TPU_NAME} \
+  --model_dir=${MODEL_DIR} \
+  --max_steps=10000 \
+  --save_steps=1000
+```
+
+## Run on Cloud ML Engine
 
 ```
 PROJECT_ID=`gcloud config list project --format "value(core.project)"`
