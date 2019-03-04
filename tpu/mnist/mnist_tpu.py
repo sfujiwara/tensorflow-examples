@@ -9,13 +9,14 @@ from tensorflow.examples.tutorials.mnist import input_data
 # Parse arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--use_tpu", action="store_true")
+parser.add_argument("--tpu_name", type=str, default="")
 parser.add_argument("--max_steps", type=int)
 parser.add_argument("--save_steps", type=int)
 args, unknown_args = parser.parse_known_args()
 
 # Setting for TPU
 USE_TPU = args.use_tpu
-TPU_NAMES = ""
+TPU_NAME = args.tpu_name
 MAX_STEPS = args.max_steps
 SAVE_STEPS = args.save_steps
 
@@ -84,7 +85,7 @@ def main():
     tf.logging.set_verbosity(tf.logging.DEBUG)
 
     if USE_TPU:
-        tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver()
+        tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver(tpu=TPU_NAME)
         master = tpu_cluster_resolver.get_master()
     else:
         master = ""
