@@ -10,6 +10,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 parser = argparse.ArgumentParser()
 parser.add_argument("--use_tpu", action="store_true")
 parser.add_argument("--tpu_name", type=str, default="")
+parser.add_argument("--save_dir", type=str)
 parser.add_argument("--max_steps", type=int)
 parser.add_argument("--save_steps", type=int)
 args, unknown_args = parser.parse_known_args()
@@ -19,9 +20,7 @@ USE_TPU = args.use_tpu
 TPU_NAME = args.tpu_name
 MAX_STEPS = args.max_steps
 SAVE_STEPS = args.save_steps
-
-# You should use Google Cloud Storage when using Cloud TPU
-MODEL_DIR = "model"
+SAVE_DIR = args.save_dir
 
 
 # Note:
@@ -105,7 +104,7 @@ def main():
 
     run_config = tf.contrib.tpu.RunConfig(
         master=master,
-        model_dir=MODEL_DIR,
+        model_dir=SAVE_DIR,
         session_config=session_config,
         tpu_config=tpu_config,
         save_summary_steps=SAVE_STEPS,
