@@ -1,0 +1,9 @@
+trainingInput:
+  runtimeVersion: '1.12'
+  pythonVersion: '3.5'
+  scaleTier: CUSTOM
+  masterType: standard
+  workerType: standard
+  parameterServerType: standard
+  workerCount: 0
+  parameterServerCount: 0
