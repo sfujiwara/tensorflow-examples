@@ -2,19 +2,6 @@ import json
 import os
 
 
-# tf_config = {
-#     "cluster": {
-#         "master": ["127.0.0.1:2222"]
-#     },
-#     "environment": "cloud",
-#     "task": {
-#         "index": 0,
-#         "cloud": "d9591dfbdf136e350-ml",
-#         "type": "master"
-#     }
-# }
-
-
 def replace_master_with_chief():
 
     tf_config = os.environ.get('TF_CONFIG')
