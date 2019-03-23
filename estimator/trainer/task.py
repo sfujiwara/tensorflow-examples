@@ -6,6 +6,7 @@ from . import model, pipeline, compat
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--batch_size', type=int)
 parser.add_argument('--distribute_strategy', default=None, type=str)
 parser.add_argument('--max_steps', type=int)
 parser.add_argument('--model_dir', default=None, type=str)
@@ -14,6 +15,7 @@ parser.add_argument('--save_steps', type=int)
 parser.add_argument('--tfds_dir', default=None, type=str)
 args = parser.parse_args()
 
+BATCH_SIZE = args.batch_size
 DISTRIBUTE_STRATEGY = args.distribute_strategy
 MAX_STEPS = args.max_steps
 MODEL_DIR = args.model_dir
@@ -66,7 +68,7 @@ def main():
     )
 
     train_spec = tf.estimator.TrainSpec(
-        input_fn=pipeline.create_train_input_fn(tfds_dir=TFDS_DIR),
+        input_fn=pipeline.create_train_input_fn(tfds_dir=TFDS_DIR, batch_size=BATCH_SIZE),
         max_steps=MAX_STEPS,
         hooks=None,
     )

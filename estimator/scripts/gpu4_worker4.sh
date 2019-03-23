@@ -8,8 +8,9 @@ gcloud ml-engine jobs submit training ${JOB_NAME} \
   --module-name=trainer.task \
   --staging-bucket="gs://${PROJECT_ID}-mlengine-staging" \
   --region=us-central1 \
-  --config=config.yaml \
+  --config=configs/gpu4_worker4.yaml \
   -- \
+  --batch_size=64 \
   --distribute_strategy="collective_all_reduce" \
   --max_steps=10000 \
   --model_dir="gs://${PROJECT_ID}-mlengine/${JOB_NAME}" \

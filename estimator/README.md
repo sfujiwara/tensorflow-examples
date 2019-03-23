@@ -1,5 +1,7 @@
 # Example of Estimator
 
+This is an example of Estimator and DistributeStrategy.
+
 ## Run on Local
 
 ```bash
@@ -39,5 +41,29 @@ python download_data.py --tfds_dir gs://${PROJECT_ID}-tfds
 bash run_cloud.sh
 ```
 
-### Tips for Distribute Strategy and Cloud ML Engine
+## Tips for Distribute Strategy and Cloud ML Engine
 
+Currently (2019-03) Cloud ML Engine can deal with three task types below:
+
+* master
+* worker
+* ps
+
+However, DistributeStrategy assumes four task types below:
+
+* chief (not mater)
+* worker
+* ps (only `ParameterServerStrategy` use it)
+* evaluator (optional)
+
+Thus, we have to use two functions in [compat.py](trainer/compat.py):
+
+* `replace_master_with_chief()`
+  * Change master ==> chief in environment variable `TF_CONF`
+* `replace_ps_with_evaluator()`
+  * Change ps ==> evaluator in environment variable `TF_CONF`
+  * We can use evaluator with `MirroredStrategy` and `CollectiveAllReduceStrategy` on Google Cloud ML Engine
+ 
+ ## Benchmarks
+ 
+ ### CollectiveAllReduceStrategy (num_gpus_per_worker: 1)
