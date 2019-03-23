@@ -8,24 +8,36 @@ python -m trainer.task
 
 ## Run on Google Cloud ML Engine
 
-### Setting
-
 ```bash
 PROJECT_ID=`gcloud config list project --format "value(core.project)"`
-TRAIN_BUCKET=gs://${PROJECT_ID}-ml
 ```
+
+### Create Google Cloud Storage Buckets
 
 ```bash
-gsutil mb gs://${PROJECT_ID}-tfds
+# Create bucket for ML Engine
+gsutil mb -c regional -l us-central1 gs://${PROJECT_ID}-mlengine
+gsutil mb -c regional -l us-central1 gs://${PROJECT_ID}-mlengine-staging
+# Create bucket for TensorFlow Datasets
+gsutil mb -c regional -l us-central1 gs://${PROJECT_ID}-tfds
 ```
+
+### Download Dataset to Cloud Storage
+
+Unfortunately, [tqdm](https://github.com/tqdm/tqdm) occurs an error on Cloud ML Engine and [tensorflow-datasets](https://github.com/tensorflow/datasets) use it when automatically downloading dataset.
+Therefore, we need to download datasets to Cloud Storage in advance.
+
+I created an [issue](https://github.com/tensorflow/datasets/issues/310) and requested the option to turn tqdm off in tensorflow-datasets.
 
 ```bash
-JOB_NAME="tf`date '+%Y%m%d%H%M%S'`"
-
-gcloud ml-engine jobs submit training ${JOB_NAME} \
-  --package-path=trainer \
-  --module-name=trainer.task \
-  --staging-bucket="gs://${PROJECT_ID}-ml" \
-  --region=us-central1 \
-  --config=config.yaml
+python download_data.py --tfds_dir gs://${PROJECT_ID}-tfds
 ```
+
+### Run Training
+
+```bash
+bash run_cloud.sh
+```
+
+### Tips for Distribute Strategy and Cloud ML Engine
+
