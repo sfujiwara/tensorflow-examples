@@ -6,7 +6,7 @@ from . import model, pipeline, compat
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--batch_size', type=int)
+parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument('--distribute_strategy', default=None, type=str)
 parser.add_argument('--max_steps', type=int)
 parser.add_argument('--model_dir', default=None, type=str)
@@ -54,11 +54,14 @@ def main():
     tf_conf = json.loads(os.environ.get("TF_CONFIG", "{}"))
     tf.logging.info("TF_CONFIG: {}".format(json.dumps(tf_conf, indent=2)))
 
+    session_config = tf.ConfigProto(log_device_placement=True)
+
     config = tf.estimator.RunConfig(
         save_summary_steps=SAVE_STEPS,
         save_checkpoints_steps=SAVE_STEPS,
         keep_checkpoint_max=10,
         train_distribute=distribute,
+        session_config=session_config,
     )
 
     tf.logging.info('Cluster Spec: {}'.format(config.cluster_spec.as_dict()))
@@ -70,10 +73,16 @@ def main():
         params=params,
     )
 
+    profiler_hook = tf.train.ProfilerHook(
+        save_steps=SAVE_STEPS,
+        output_dir=os.path.join(estimator.model_dir, 'timeline')
+    )
+    train_hooks = [profiler_hook]
+
     train_spec = tf.estimator.TrainSpec(
         input_fn=pipeline.create_train_input_fn(tfds_dir=TFDS_DIR, batch_size=BATCH_SIZE),
         max_steps=MAX_STEPS,
-        hooks=None,
+        hooks=train_hooks,
     )
 
     eval_spec = tf.estimator.EvalSpec(
