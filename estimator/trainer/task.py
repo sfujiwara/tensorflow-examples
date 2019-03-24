@@ -27,6 +27,7 @@ TFDS_DIR = args.tfds_dir
 def main():
 
     tf.logging.set_verbosity(tf.logging.INFO)
+    tf.logging.info(tf.__version__)
 
     params = {
         'optimizer': tf.train.GradientDescentOptimizer(learning_rate=1e-2)
@@ -36,7 +37,9 @@ def main():
     if DISTRIBUTE_STRATEGY == 'mirrored':
         compat.replace_master_with_chief()
         compat.replace_ps_with_evaluator()
-        distribute = tf.contrib.distribute.MirroredStrategy()
+        compat.delete_tf_config()
+        # distribute = tf.contrib.distribute.MirroredStrategy(num_gpus_per_worker=NUM_GPUS_PER_WORKER)
+        distribute = tf.distribute.MirroredStrategy()
     elif DISTRIBUTE_STRATEGY == 'collective_all_reduce':
         compat.replace_master_with_chief()
         compat.replace_ps_with_evaluator()

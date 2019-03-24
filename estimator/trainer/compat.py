@@ -2,6 +2,12 @@ import json
 import os
 
 
+def delete_tf_config():
+
+    if 'TF_CONFIG' in os.environ.keys():
+        del os.environ['TF_CONFIG']
+
+
 def replace_master_with_chief():
 
     tf_config = os.environ.get('TF_CONFIG')
@@ -27,6 +33,10 @@ def replace_ps_with_evaluator():
         return
 
     tf_config = json.loads(tf_config)
+
+    if 'ps' not in tf_config['cluster'].keys():
+        return
+
     tf_config['cluster']['evaluator'] = tf_config['cluster']['ps']
     del tf_config['cluster']['ps']
 
