@@ -5,5 +5,5 @@ from setuptools import setup
 setup(
     name='trainer',
     packages=find_packages(),
-    install_requires=['tensorflow-datasets'],
+    install_requires=['tensorflow-datasets', 'tensorflow-hub'],
 )

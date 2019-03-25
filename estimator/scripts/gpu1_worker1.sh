@@ -10,9 +10,8 @@ gcloud ml-engine jobs submit training ${JOB_NAME} \
   --region=us-central1 \
   --config=configs/gpu1_worker1.yaml \
   -- \
-  --batch_size=256 \
+  --batch_size=64 \
   --max_steps=10000 \
   --model_dir="gs://${PROJECT_ID}-mlengine/${JOB_NAME}" \
-  --num_gpus_per_worker=1 \
   --save_steps=2500 \
   --tfds_dir="gs://${PROJECT_ID}-tfds"

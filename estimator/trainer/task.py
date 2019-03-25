@@ -86,7 +86,7 @@ def main():
     )
 
     eval_spec = tf.estimator.EvalSpec(
-        input_fn=pipeline.create_eval_input_fn(tfds_dir=TFDS_DIR),
+        input_fn=pipeline.create_eval_input_fn(tfds_dir=TFDS_DIR, batch_size=BATCH_SIZE),
         steps=None,
         start_delay_secs=0,
         throttle_secs=5,

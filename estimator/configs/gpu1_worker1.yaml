@@ -1,9 +1,4 @@
 trainingInput:
   runtimeVersion: '1.13'
   pythonVersion: '3.5'
-  scaleTier: CUSTOM
-  masterType: standard_gpu
-  workerType: standard_gpu
-  parameterServerType: standard_gpu
-  workerCount: 0
-  parameterServerCount: 0
+  scaleTier: BASIC_GPU

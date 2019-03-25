@@ -1,20 +1,29 @@
 import tensorflow as tf
+import tensorflow_hub as hub
 
 
 def model_fn(features, labels, mode, params):
+
+    n_classes = 2
 
     # Extract inputs
     x = features
 
     # Build network
-    x = tf.layers.conv2d(x, 32, [3, 3], padding='same', activation=tf.nn.relu)
-    x = tf.layers.conv2d(x, 64, [3, 3], padding='same', activation=tf.nn.relu)
-    x = tf.layers.max_pooling2d(x, pool_size=[2, 2], strides=[1, 1])
-    x = tf.layers.dropout(x, rate=0.5, training=(mode == tf.estimator.ModeKeys.TRAIN))
-    x = tf.layers.flatten(x)
-    x = tf.layers.dense(x, 128, activation=tf.nn.relu)
-    x = tf.layers.dropout(x, rate=0.5, training=(mode == tf.estimator.ModeKeys.TRAIN))
-    logits = tf.layers.dense(x, 10)
+    # x = tf.layers.conv2d(x, 32, [3, 3], padding='same', activation=tf.nn.relu)
+    # x = tf.layers.conv2d(x, 64, [3, 3], padding='same', activation=tf.nn.relu)
+    # x = tf.layers.max_pooling2d(x, pool_size=[2, 2], strides=[1, 1])
+    # x = tf.layers.dropout(x, rate=0.5, training=(mode == tf.estimator.ModeKeys.TRAIN))
+    # x = tf.layers.flatten(x)
+    # x = tf.layers.dense(x, 128, activation=tf.nn.relu)
+    # x = tf.layers.dropout(x, rate=0.5, training=(mode == tf.estimator.ModeKeys.TRAIN))
+    # logits = tf.layers.dense(x, 10)
+
+    # Build ResNet
+    module = hub.Module('https://tfhub.dev/google/imagenet/resnet_v2_50/feature_vector/1', trainable=True)
+    x = module(x)
+    x = tf.layers.dense(x, 256, activation=tf.nn.relu)
+    logits = tf.layers.dense(x, n_classes, activation=None)
 
     # Build loss
     loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=logits)
