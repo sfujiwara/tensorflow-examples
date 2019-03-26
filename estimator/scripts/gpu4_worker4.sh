@@ -11,6 +11,7 @@ gcloud ml-engine jobs submit training ${JOB_NAME} \
   --config=configs/gpu4_worker4.yaml \
   -- \
   --batch_size=64 \
+  --learning_rate=0.01 \
   --distribute_strategy="collective_all_reduce" \
   --max_steps=10000 \
   --model_dir="gs://${PROJECT_ID}-mlengine/${JOB_NAME}" \
