@@ -22,6 +22,8 @@ gsutil mb -c regional -l us-central1 gs://${PROJECT_ID}-mlengine
 gsutil mb -c regional -l us-central1 gs://${PROJECT_ID}-mlengine-staging
 # Create bucket for TensorFlow Datasets
 gsutil mb -c regional -l us-central1 gs://${PROJECT_ID}-tfds
+# Create bucket for TensorFlow Hub
+gsutil mb -c regional -l us-central1 gs://${PROJECT_ID}-tfhub
 ```
 
 ### Download Dataset to Cloud Storage

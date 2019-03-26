@@ -10,8 +10,9 @@ def model_fn(features, labels, mode, params):
     x = features
 
     # Build ResNet
-    module = hub.Module('https://tfhub.dev/google/imagenet/resnet_v2_50/feature_vector/1', trainable=True)
+    module = hub.Module('https://tfhub.dev/google/imagenet/resnet_v2_50/feature_vector/1', trainable=False)
     x = module(x)
+
     x = tf.layers.dense(x, 256, activation=tf.nn.relu)
     logits = tf.layers.dense(x, n_classes, activation=None)
 
