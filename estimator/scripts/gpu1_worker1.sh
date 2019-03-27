@@ -11,7 +11,9 @@ gcloud ml-engine jobs submit training ${JOB_NAME} \
   --config=configs/gpu1_worker1.yaml \
   -- \
   --batch_size=64 \
+  --learning_rate=0.01 \
   --max_steps=10000 \
   --model_dir="gs://${PROJECT_ID}-mlengine/${JOB_NAME}" \
   --save_steps=2500 \
-  --tfds_dir="gs://${PROJECT_ID}-tfds"
+  --tfds_dir="gs://${PROJECT_ID}-tfds" \
+  --tfhub_dir="gs://${PROJECT_ID}-tfhub"

@@ -36,17 +36,17 @@ TFHUB_DIR = args.tfhub_dir
 def select_distribute_strategy(distribute_strategy_name):
 
     # Set DistributeStrategy
-    if DISTRIBUTE_STRATEGY == 'mirrored':
+    if distribute_strategy_name == 'mirrored':
         compat.replace_master_with_chief()
         compat.replace_ps_with_evaluator()
         compat.delete_tf_config()
         # distribute = tf.contrib.distribute.MirroredStrategy(num_gpus_per_worker=NUM_GPUS_PER_WORKER)
         distribute = tf.distribute.MirroredStrategy()
-    elif DISTRIBUTE_STRATEGY == 'collective_all_reduce':
+    elif distribute_strategy_name == 'collective_all_reduce':
         compat.replace_master_with_chief()
         compat.replace_ps_with_evaluator()
         distribute = tf.contrib.distribute.CollectiveAllReduceStrategy(num_gpus_per_worker=NUM_GPUS_PER_WORKER)
-    elif DISTRIBUTE_STRATEGY == 'parameter_server':
+    elif distribute_strategy_name == 'parameter_server':
         compat.replace_master_with_chief()
         distribute = tf.contrib.distribute.ParameterServerStrategy(num_gpus_per_worker=NUM_GPUS_PER_WORKER)
     else:

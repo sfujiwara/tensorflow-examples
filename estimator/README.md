@@ -32,6 +32,10 @@ Checkpoint and summary are saved every `save_step`.
 
 #### `--distribute_strategy`
 
+* mirrored
+* collective_all_reduce
+* parameter_server
+
 #### `--num_gpus_per_worker`
 
 #### `--tfds_dir`
