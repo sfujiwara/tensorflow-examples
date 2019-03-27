@@ -32,15 +32,26 @@ Checkpoint and summary are saved every `save_step`.
 
 #### `--distribute_strategy`
 
+The name of DistributeStrategy.
+Valid names are below:
+
 * mirrored
 * collective_all_reduce
 * parameter_server
 
 #### `--num_gpus_per_worker`
 
+When you use CollectiveAllReduceStrategy or ParameterServerStrategy, you must specify the number of GPUs per worker.
+
 #### `--tfds_dir`
 
+Cache directory of TensorFlow Datasets.
+If you don't specify it, default directory `~/tensorflow_datasets` is used.
+
 #### `--tfhub_dir`
+
+Cache directory of TensorFlow Hub.
+If you don't specify it, default directory is used.
 
 ## Run on Local
 
