@@ -1,3 +1,4 @@
+import multiprocessing
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
@@ -18,8 +19,21 @@ def create_train_input_fn(tfds_dir, batch_size):
 
     def train_input_fn():
         ds = tfds.load('cats_vs_dogs', split=tfds.Split.TRAIN, data_dir=tfds_dir)
-        ds = ds.map(preprocess)
-        ds = ds.repeat().shuffle(32).batch(batch_size)
+        # NOTE:
+        # * `shuffle_and_repeat` has higher performance than using `shuffle` and `repeat`
+        # * https://www.tensorflow.org/guide/performance/datasets#repeat_and_shuffle
+        ds = ds.apply(tf.data.experimental.shuffle_and_repeat(buffer_size=32))
+        # NOTE:
+        # * `map_and_batch` has higher performance than using `map` and `batch`
+        # * Use the number of CPUs or `tf.data.experimental.AUTOTUNE` for `num_parallel_calls`
+        # * https://www.tensorflow.org/guide/performance/datasets#map_and_batch
+        ds = ds.apply(
+            tf.data.experimental.map_and_batch(
+                map_func=preprocess,
+                batch_size=batch_size,
+                num_parallel_calls=multiprocessing.cpu_count(),
+            )
+        )
         ds = ds.prefetch(1)
         return ds
 
@@ -30,8 +44,14 @@ def create_eval_input_fn(tfds_dir, batch_size):
 
     def eval_input_fn():
         ds = tfds.load('cats_vs_dogs', split=tfds.Split.TRAIN, data_dir=tfds_dir)
-        ds = ds.map(preprocess)
-        ds = ds.repeat(1).batch(batch_size)
+        ds = ds.apply(tf.data.experimental.shuffle_and_repeat(buffer_size=32, count=1))
+        ds = ds.apply(
+            tf.data.experimental.map_and_batch(
+                map_func=preprocess,
+                batch_size=batch_size,
+                num_parallel_calls=multiprocessing.cpu_count(),
+            )
+        )
         ds = ds.prefetch(1)
         return ds
 

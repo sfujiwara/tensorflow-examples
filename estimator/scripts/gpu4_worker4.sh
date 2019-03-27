@@ -18,4 +18,3 @@ gcloud ml-engine jobs submit training ${JOB_NAME} \
   --save_steps=2500 \
   --tfds_dir="gs://${PROJECT_ID}-tfds" \
   --tfhub_dir="gs://${PROJECT_ID}-tfhub"
-
