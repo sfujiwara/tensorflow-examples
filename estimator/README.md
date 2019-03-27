@@ -1,6 +1,42 @@
-# Example of Estimator
+# Examples of Estimator
 
 This is an example of Estimator and DistributeStrategy.
+
+## Arguments
+
+### Required Arguments
+
+#### `--batch_size`
+
+The number of samples which used for mini-batch training.
+In case of synchronous distributed learning, each GPUs compute gradient with `batch_size`.
+Therefore, the total number of samples is `batch_size * n_gpus`. 
+
+#### `--learning_rate`
+
+Learning rate which used for gradient descent optimizer.
+
+#### `--max_steps`
+
+Training will stop when `global_step` is greater than equal `max_step`.
+
+#### `--model_dir`
+
+Directory where checkpoint, summary, and SavedModel are saved to.
+
+#### `--save_steps`
+
+Checkpoint and summary are saved every `save_step`.
+
+### Optional Arguments
+
+#### `--distribute_strategy`
+
+#### `--num_gpus_per_worker`
+
+#### `--tfds_dir`
+
+#### `--tfhub_dir`
 
 ## Run on Local
 
