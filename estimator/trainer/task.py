@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import tensorflow as tf
+import tensorflow_datasets as tfds
 from . import model, pipeline, compat
 
 
@@ -15,6 +16,7 @@ parser.add_argument('--model_dir', type=str)
 parser.add_argument('--save_steps', type=int)
 
 # Optional
+parser.add_argument('--eval_steps', default=None, type=int)
 parser.add_argument('--distribute_strategy', default=None, type=str)
 parser.add_argument('--num_gpus_per_worker', default=None, type=int)
 parser.add_argument('--tfds_dir', default=None, type=str)
@@ -22,13 +24,17 @@ parser.add_argument('--tfhub_dir', default=None, type=str)
 
 args = parser.parse_args()
 
+# Required
 BATCH_SIZE = args.batch_size
-DISTRIBUTE_STRATEGY = args.distribute_strategy
 LEARNING_RATE = args.learning_rate
 MAX_STEPS = args.max_steps
 MODEL_DIR = args.model_dir
-NUM_GPUS_PER_WORKER = args.num_gpus_per_worker
 SAVE_STEPS = args.save_steps
+
+# Optional
+EVAL_STEPS = args.eval_steps
+DISTRIBUTE_STRATEGY = args.distribute_strategy
+NUM_GPUS_PER_WORKER = args.num_gpus_per_worker
 TFDS_DIR = args.tfds_dir
 TFHUB_DIR = args.tfhub_dir
 
@@ -65,6 +71,7 @@ def main():
     tf.logging.info(tf.__version__)
 
     params = {
+        'n_classes': tfds.builder('imagenet2012').info.features['label'].num_classes,
         'optimizer': tf.train.GradientDescentOptimizer(learning_rate=LEARNING_RATE)
     }
 
@@ -116,7 +123,7 @@ def main():
 
     eval_spec = tf.estimator.EvalSpec(
         input_fn=pipeline.create_eval_input_fn(tfds_dir=TFDS_DIR, batch_size=BATCH_SIZE),
-        steps=None,
+        steps=EVAL_STEPS,
         start_delay_secs=10,
         throttle_secs=30,
     )

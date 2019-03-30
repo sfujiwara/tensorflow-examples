@@ -18,7 +18,7 @@ def preprocess(ds):
 def create_train_input_fn(tfds_dir, batch_size):
 
     def train_input_fn():
-        ds = tfds.load('cats_vs_dogs', split=tfds.Split.TRAIN, data_dir=tfds_dir)
+        ds = tfds.load('imagenet2012', split=tfds.Split.TRAIN, data_dir=tfds_dir)
         # NOTE:
         # * `shuffle_and_repeat` has higher performance than using `shuffle` and `repeat`
         # * https://www.tensorflow.org/guide/performance/datasets#repeat_and_shuffle
@@ -43,8 +43,8 @@ def create_train_input_fn(tfds_dir, batch_size):
 def create_eval_input_fn(tfds_dir, batch_size):
 
     def eval_input_fn():
-        ds = tfds.load('cats_vs_dogs', split=tfds.Split.TRAIN, data_dir=tfds_dir)
-        ds = ds.apply(tf.data.experimental.shuffle_and_repeat(buffer_size=32, count=1))
+        ds = tfds.load('imagenet2012', split=tfds.Split.VALIDATION, data_dir=tfds_dir)
+        ds = ds.repeat(1)
         ds = ds.apply(
             tf.data.experimental.map_and_batch(
                 map_func=preprocess,

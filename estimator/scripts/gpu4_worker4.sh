@@ -12,10 +12,11 @@ gcloud ml-engine jobs submit training ${JOB_NAME} \
   -- \
   --batch_size=64 \
   --learning_rate=0.01 \
-  --distribute_strategy="collective_all_reduce" \
   --max_steps=10000 \
   --model_dir="gs://${PROJECT_ID}-mlengine/${JOB_NAME}" \
-  --num_gpus_per_worker=1 \
   --save_steps=2500 \
+  --eval_steps=10 \
+  --distribute_strategy="collective_all_reduce" \
+  --num_gpus_per_worker=1 \
   --tfds_dir="gs://${PROJECT_ID}-tfds" \
   --tfhub_dir="gs://${PROJECT_ID}-tfhub"
