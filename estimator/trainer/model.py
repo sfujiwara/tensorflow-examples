@@ -1,5 +1,6 @@
 import tensorflow as tf
 import tensorflow_hub as hub
+from . import vgg
 
 
 def model_fn(features, labels, mode, params):
@@ -8,12 +9,15 @@ def model_fn(features, labels, mode, params):
     x = features
 
     # Build ResNet
-    module = hub.Module(
-        'https://tfhub.dev/google/imagenet/resnet_v2_50/feature_vector/1',
-        trainable=False,
-        tags={'train'}
-    )
-    x = module(x)
+    # module = hub.Module(
+    #     'https://tfhub.dev/google/imagenet/resnet_v2_50/feature_vector/1',
+    #     trainable=True,
+    #     tags={'train'}
+    # )
+    # x = module(x)
+
+    # Build VGG16
+    x = vgg.build_vgg16_graph(img_tensor=x, trainable=True, include_top=False)
 
     x = tf.layers.dense(x, 256, activation=tf.nn.relu)
     logits = tf.layers.dense(x, params['n_classes'], activation=None)

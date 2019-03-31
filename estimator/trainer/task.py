@@ -38,6 +38,8 @@ NUM_GPUS_PER_WORKER = args.num_gpus_per_worker
 TFDS_DIR = args.tfds_dir
 TFHUB_DIR = args.tfhub_dir
 
+TFDS_DATASET = 'imagenet2012'
+
 
 def select_distribute_strategy(distribute_strategy_name):
 
@@ -71,7 +73,7 @@ def main():
     tf.logging.info(tf.__version__)
 
     params = {
-        'n_classes': tfds.builder('imagenet2012').info.features['label'].num_classes,
+        'n_classes': tfds.builder(TFDS_DATASET).info.features['label'].num_classes,
         'optimizer': tf.train.GradientDescentOptimizer(learning_rate=LEARNING_RATE)
     }
 
@@ -87,7 +89,7 @@ def main():
     # * TensorFlow Hub automatically add operations which run only on CPU such as save
     # * DistributeStrategy use `tf.device('.../GPU:0')` context
     session_config = tf.ConfigProto(
-        log_device_placement=True,
+        log_device_placement=False,
         allow_soft_placement=True,
     )
 
@@ -115,14 +117,16 @@ def main():
     )
     train_hooks = [profiler_hook]
 
+    train_input_fn = pipeline.create_train_input_fn(tfds_dir=TFDS_DIR, batch_size=BATCH_SIZE, tfds_dataset=TFDS_DATASET)
     train_spec = tf.estimator.TrainSpec(
-        input_fn=pipeline.create_train_input_fn(tfds_dir=TFDS_DIR, batch_size=BATCH_SIZE),
+        input_fn=train_input_fn,
         max_steps=MAX_STEPS,
         hooks=train_hooks,
     )
 
+    eval_input_fn = pipeline.create_eval_input_fn(tfds_dir=TFDS_DIR, batch_size=BATCH_SIZE, tfds_dataset=TFDS_DATASET)
     eval_spec = tf.estimator.EvalSpec(
-        input_fn=pipeline.create_eval_input_fn(tfds_dir=TFDS_DIR, batch_size=BATCH_SIZE),
+        input_fn=eval_input_fn,
         steps=EVAL_STEPS,
         start_delay_secs=10,
         throttle_secs=30,

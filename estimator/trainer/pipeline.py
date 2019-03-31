@@ -15,10 +15,10 @@ def preprocess(ds):
     return x, ds['label']
 
 
-def create_train_input_fn(tfds_dir, batch_size):
+def create_train_input_fn(tfds_dir, batch_size, tfds_dataset):
 
     def train_input_fn():
-        ds = tfds.load('imagenet2012', split=tfds.Split.TRAIN, data_dir=tfds_dir)
+        ds = tfds.load(tfds_dataset, split=tfds.Split.TRAIN, data_dir=tfds_dir)
         # NOTE:
         # * `shuffle_and_repeat` has higher performance than using `shuffle` and `repeat`
         # * https://www.tensorflow.org/guide/performance/datasets#repeat_and_shuffle
@@ -40,10 +40,15 @@ def create_train_input_fn(tfds_dir, batch_size):
     return train_input_fn
 
 
-def create_eval_input_fn(tfds_dir, batch_size):
+def create_eval_input_fn(tfds_dir, batch_size, tfds_dataset):
+
+    if tfds_dataset == 'imagenet2012':
+        split = tfds.Split.VALIDATION
+    else:
+        split = tfds.Split.TEST
 
     def eval_input_fn():
-        ds = tfds.load('imagenet2012', split=tfds.Split.VALIDATION, data_dir=tfds_dir)
+        ds = tfds.load(tfds_dataset, split=split, data_dir=tfds_dir)
         ds = ds.repeat(1)
         ds = ds.apply(
             tf.data.experimental.map_and_batch(
