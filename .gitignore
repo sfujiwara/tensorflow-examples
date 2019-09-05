@@ -6,3 +6,4 @@ data
 summary
 *.pyc
 venv
+.vscode
