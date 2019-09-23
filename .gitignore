@@ -7,3 +7,15 @@ summary
 *.pyc
 venv
 .vscode
+
+# TensorBoard
+event.out.tfevents.*
+*.trace
+
+# SavedModel
+variables.data-*
+variables.index
+saved_model.pb
+
+# Checkpoint
+checkpoint*
