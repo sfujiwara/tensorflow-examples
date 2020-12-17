@@ -55,7 +55,7 @@ def main():
     ds_eval = eval_dataset()
 
     checkpoint_dir = 'outputs/checkpoints'
-    savedmodel_dir = 'outputs/models/model-epoch-{epoch:02d}'
+    savedmodel_dir = 'outputs/models/outputs-epoch-{epoch:02d}'
     checkpoint_name = 'checkpoint-{epoch:02d}'
 
     # Callbacks

@@ -1,10 +1,13 @@
-IMAGE="mnist-tfserving"
+PROJECT_ID="sfujiwara"
+REGION="us-central1"
+IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/tfserving/mnist"
 
 docker run \
   --rm \
+  -p 8501:8501 \
   -v "$(PWD)/outputs:/outputs" \
   ${IMAGE} \
-  --port=8500 \
+  --rest_api_port=8501 \
   --model_name="mnist" \
   --model_base_path="/models"
 

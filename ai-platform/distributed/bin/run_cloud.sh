@@ -13,5 +13,5 @@ gcloud ai-platform jobs submit training $JOB_NAME \
   --worker-image-uri ${WORKER_IMAGE_URI} \
   --parameter-server-image-uri ${PS_IMAGE_URI} \
   -- \
-  --model-dir=gs://hoge \
+  --outputs-dir=gs://hoge \
   --epochs=10

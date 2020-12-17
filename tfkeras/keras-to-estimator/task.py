@@ -44,7 +44,7 @@ def main():
     model = create_model()
 
     config = tf.estimator.RunConfig(
-        model_dir='./model',
+        model_dir='./outputs',
         train_distribute=tf.distribute.MirroredStrategy(),
     )
 
